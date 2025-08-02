@@ -4,7 +4,7 @@
     
 <h3>Edit your Listing</h3>
 
-<form method="POST" action="/listings/<%= listing._id %>?_method=PUT">
+<form method="POST" action="/listings/<%= listing._id %>?_method=PUT" novalidate class="needs-validation">
   <!-- Title -->
   <div class="mb-3">
     <label for="title" class="form-label">Title</label>
@@ -13,7 +13,9 @@
       value="<%= listing.title %>"
       type="text"
       class="form-control"
+      required
     />
+    <div class="valid-feedback">Title looks good!</div>
   </div>
 
   <!-- Description -->
@@ -22,20 +24,26 @@
     <textarea
       name="listing[description]"
       class="form-control"
+      required
       rows="3"
     ><%= listing.description %></textarea>
+    <div class="invalid-feedback">Please enter a short description</div>
   </div>
 
   <!-- Image Link -->
   <div class="mb-3">
     <label for="image" class="form-label">Image Link</label>
     <input
-      name="listing[image]"
-      value="<%= listing.image %>"
+      name="listing[image][url]"
+      value="<%= listing.image.url %>"
       type="text"
       class="form-control"
+      required
     />
+    <input type="hidden" name="listing[image][filename]" value="<%= listing.image.filename %>">
+    <div class="invalid-feedback">Please enter a valid Link for Image</div>
   </div>
+
    <div class="row">
       <!-- Price -->
     <div class="mb-3 col-md-4">
@@ -45,7 +53,9 @@
       value="<%= listing.price %>"
       type="number"
       class="form-control"
+      required
     />
+    <div class="invalid-feedback">Price should be valid</div>
   </div>
 
   <!-- Country -->
@@ -56,7 +66,9 @@
       value="<%= listing.country %>"
       type="text"
       class="form-control"
+      required
     />
+    <div class="invalid-feedback">Country name should be valid</div>
   </div>
    </div>
   
@@ -69,7 +81,9 @@
       value="<%= listing.location %>"
       type="text"
       class="form-control"
+      required
     />
+    <div class="invalid-feedback">Location should be valid</div>
   </div>
 
   <!-- Submit Button -->
@@ -77,3 +91,4 @@
 </form>
 </div>
   </div>
+  <script src="/js/script.js"></script>
