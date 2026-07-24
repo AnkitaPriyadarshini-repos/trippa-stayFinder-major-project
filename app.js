@@ -21,41 +21,42 @@ const listingRouter = require("./routes/listing.js");
 const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
-const dbUrl = process.env.ATLASDB_URL || "mongodb://127.0.0.1:27017/trippa";
-
-main()
-  .then(() => {
-    console.log("connected to DB");
-  })
-  .catch((err) => {
-    console.log(err);
-  });
-
-async function main() {
-  await mongoose.connect(dbUrl);
-}
+const dbUrl = process.env.ATLASDB_URL;
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({extended: true}));
 app.use(methodOverride("_method"));
-app.engine('ejs',ejsMate);
+app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 
-const store = MongoStore.create({
-    mongoUrl: dbUrl,
-    crypto: {
-        secret: process.env.SECRET || "mysupersecretcode",
-    },
-    touchAfter: 24 * 3600,
-});
+if (dbUrl) {
+  mongoose.connect(dbUrl).then(() => {
+    console.log("connected to DB");
+  }).catch((err) => {
+    console.log("DB Connection Error:", err.message);
+  });
+}
 
-store.on("error", (err) => {
-    console.log("ERROR in MONGO SESSION STORE", err);
-});
+let store;
+if (dbUrl) {
+  try {
+    store = MongoStore.create({
+      mongoUrl: dbUrl,
+      crypto: {
+        secret: process.env.SECRET || "mysupersecretcode",
+      },
+      touchAfter: 24 * 3600,
+    });
+    store.on("error", (err) => {
+      console.log("ERROR in MONGO SESSION STORE", err.message || err);
+    });
+  } catch (err) {
+    console.log("MongoStore init error:", err.message);
+  }
+}
 
 const sessionOptions = {
-    store,
     secret: process.env.SECRET || "mysupersecretcode",
     resave: false,
     saveUninitialized: true,
@@ -65,6 +66,10 @@ const sessionOptions = {
         httpOnly: true,
     },
 };
+
+if (store) {
+    sessionOptions.store = store;
+}
 
 app.get("/", (req, res) => {
   res.redirect("/listings");
