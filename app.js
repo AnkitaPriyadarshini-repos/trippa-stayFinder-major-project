@@ -22,6 +22,7 @@ const reviewRouter = require("./routes/review.js");
 const userRouter = require("./routes/user.js");
 
 const dbUrl = process.env.ATLASDB_URL;
+const isRealMongo = dbUrl && !dbUrl.includes("cluster0.mongodb.net");
 
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -30,7 +31,7 @@ app.use(methodOverride("_method"));
 app.engine('ejs', ejsMate);
 app.use(express.static(path.join(__dirname, "public")));
 
-if (dbUrl) {
+if (isRealMongo) {
   mongoose.connect(dbUrl).then(() => {
     console.log("connected to DB");
   }).catch((err) => {
@@ -39,7 +40,7 @@ if (dbUrl) {
 }
 
 let store;
-if (dbUrl) {
+if (isRealMongo) {
   try {
     store = MongoStore.create({
       mongoUrl: dbUrl,
@@ -86,34 +87,34 @@ passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-app.use((req,res,next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currUser = req.user;
+app.use((req, res, next) => {
+  try {
+    res.locals.success = req.flash ? req.flash("success") : [];
+    res.locals.error = req.flash ? req.flash("error") : [];
+  } catch (e) {
+    res.locals.success = [];
+    res.locals.error = [];
+  }
+  res.locals.currUser = req.user || null;
   next();
 });
 
-// app.get("/demouser", async (req, res) => {
-//     let fakeUser = new User({
-//         email: "student@gmail.com",
-//         username: "delta-student",
-//     });
-//     let registeredUser = await User.register(fakeUser, "helloworld");
-//     res.send(registeredUser);
-// });
-
-app.use("/listings",listingRouter);
+app.use("/listings", listingRouter);
 app.use("/listings/:id/reviews", reviewRouter);
 app.use("/", userRouter);
 
-app.use((req,res,next) => {
-  next(new ExpressError(404,"Page Not Found!"));
+app.use((req, res, next) => {
+  next(new ExpressError(404, "Page Not Found!"));
 });
 
 // error handler
 app.use((err, req, res, next) => {
-    let { statusCode = 500, message = "something went wrong!" } = err;
-    res.status(statusCode).render("error", { err });
+    let { statusCode = 500, message = "something went wrong!" } = err || {};
+    try {
+        res.status(statusCode).render("error", { err: { statusCode, message } });
+    } catch (e) {
+        res.status(statusCode).send(`<h1>Error ${statusCode}</h1><p>${message}</p>`);
+    }
 });
 
 const port = process.env.PORT || 8080;
