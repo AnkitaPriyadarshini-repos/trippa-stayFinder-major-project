@@ -15,6 +15,9 @@ const sampleListings = [
         price: 2500,
         location: "Malibu",
         country: "United States",
+        category: "Trending",
+        rating: 4.95,
+        reviewsCount: 48,
         reviews: [],
         owner: { username: "VillaHost" },
         geometry: { type: "Point", coordinates: [-118.7798, 34.0259] }
@@ -30,6 +33,9 @@ const sampleListings = [
         price: 1800,
         location: "New York",
         country: "United States",
+        category: "Iconic Cities",
+        rating: 4.88,
+        reviewsCount: 32,
         reviews: [],
         owner: { username: "LoftHost" },
         geometry: { type: "Point", coordinates: [-74.006, 40.7128] }
@@ -45,6 +51,9 @@ const sampleListings = [
         price: 3200,
         location: "Aspen",
         country: "United States",
+        category: "Mountains",
+        rating: 4.98,
+        reviewsCount: 64,
         reviews: [],
         owner: { username: "ChaletHost" },
         geometry: { type: "Point", coordinates: [-106.837, 39.1911] }
@@ -60,6 +69,9 @@ const sampleListings = [
         price: 5000,
         location: "Highlands",
         country: "United Kingdom",
+        category: "Castles",
+        rating: 4.96,
+        reviewsCount: 89,
         reviews: [],
         owner: { username: "CastleHost" },
         geometry: { type: "Point", coordinates: [-4.2247, 57.4778] }
@@ -75,6 +87,9 @@ const sampleListings = [
         price: 1400,
         location: "Ubud",
         country: "Indonesia",
+        category: "Camping",
+        rating: 4.91,
+        reviewsCount: 42,
         reviews: [],
         owner: { username: "TreehouseHost" },
         geometry: { type: "Point", coordinates: [115.2625, -8.5069] }
@@ -90,21 +105,164 @@ const sampleListings = [
         price: 4200,
         location: "Cancun",
         country: "Mexico",
+        category: "Amazing Pools",
+        rating: 4.99,
+        reviewsCount: 110,
         reviews: [],
         owner: { username: "ResortHost" },
         geometry: { type: "Point", coordinates: [-86.8515, 21.1619] }
+    },
+    {
+        _id: "sample7",
+        title: "Glass Igloo Under Northern Lights",
+        description: "Watch the magical Aurora Borealis from your heated glass dome bedroom.",
+        image: {
+            url: "https://images.unsplash.com/photo-1517411032315-54ef2cb783bb?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 3800,
+        location: "Rovaniemi",
+        country: "Finland",
+        category: "Artic",
+        rating: 4.97,
+        reviewsCount: 76,
+        reviews: [],
+        owner: { username: "AuroraHost" },
+        geometry: { type: "Point", coordinates: [25.7285, 66.5039] }
+    },
+    {
+        _id: "sample8",
+        title: "Organic Farmstay & Vine Sanctuary",
+        description: "Wake up to fresh farm breakfasts and wine tasting among rolling olive groves.",
+        image: {
+            url: "https://images.unsplash.com/photo-1500382017468-9049fed747ef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 1600,
+        location: "Tuscany",
+        country: "Italy",
+        category: "Farms",
+        rating: 4.89,
+        reviewsCount: 39,
+        reviews: [],
+        owner: { username: "TuscanyHost" },
+        geometry: { type: "Point", coordinates: [11.2558, 43.7696] }
+    },
+    {
+        _id: "sample9",
+        title: "Futuristic Stargazing Geodesic Dome",
+        description: "Zero-light-pollution desert dome with professional telescope and star deck.",
+        image: {
+            url: "https://images.unsplash.com/photo-1510798831971-661eb04b3739?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 2100,
+        location: "Joshua Tree",
+        country: "United States",
+        category: "Domes",
+        rating: 4.94,
+        reviewsCount: 55,
+        reviews: [],
+        owner: { username: "DomeHost" },
+        geometry: { type: "Point", coordinates: [-116.3131, 34.1347] }
+    },
+    {
+        _id: "sample10",
+        title: "Classic Vintage Wooden Houseboat",
+        description: "Docked in scenic canals with rooftop sun terrace and paddleboards included.",
+        image: {
+            url: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 1950,
+        location: "Amsterdam",
+        country: "Netherlands",
+        category: "Boats",
+        rating: 4.90,
+        reviewsCount: 47,
+        reviews: [],
+        owner: { username: "CanalHost" },
+        geometry: { type: "Point", coordinates: [4.9041, 52.3676] }
+    },
+    {
+        _id: "sample11",
+        title: "Boutique Heritage Master Bedroom Suite",
+        description: "Elegant private suite with handcrafted mahogany furniture and artisan breakfast.",
+        image: {
+            url: "https://images.unsplash.com/photo-1618773928121-c32242e63f39?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 1250,
+        location: "Paris",
+        country: "France",
+        category: "Rooms",
+        rating: 4.87,
+        reviewsCount: 29,
+        reviews: [],
+        owner: { username: "ParisHost" },
+        geometry: { type: "Point", coordinates: [2.3522, 48.8566] }
+    },
+    {
+        _id: "sample12",
+        title: "Cliffside Sunset Villa with Infinity Pool",
+        description: "Perched over the Aegean sea featuring iconic whitewashed architecture.",
+        image: {
+            url: "https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+            filename: "listingimage"
+        },
+        price: 4800,
+        location: "Santorini",
+        country: "Greece",
+        category: "Trending",
+        rating: 4.97,
+        reviewsCount: 92,
+        reviews: [],
+        owner: { username: "SantoriniHost" },
+        geometry: { type: "Point", coordinates: [25.4317, 36.3932] }
     }
 ];
 
 module.exports.index = async (req, res) => {
     try {
-        let allListings = await Listing.find({});
+        const { search, category } = req.query;
+        let queryObj = {};
+
+        if (search) {
+            const regex = new RegExp(search, "i");
+            queryObj = {
+                $or: [
+                    { title: regex },
+                    { location: regex },
+                    { country: regex }
+                ]
+            };
+        }
+
+        let allListings = await Listing.find(queryObj);
         if (!allListings || allListings.length === 0) {
             allListings = sampleListings;
         }
-        res.render("listings/index.ejs", { allListings });
+
+        // Apply in-memory search and category filter for sampleListings fallback
+        if (search) {
+            const s = search.toLowerCase();
+            allListings = allListings.filter(l =>
+                (l.title && l.title.toLowerCase().includes(s)) ||
+                (l.location && l.location.toLowerCase().includes(s)) ||
+                (l.country && l.country.toLowerCase().includes(s))
+            );
+        }
+
+        if (category && category !== "all") {
+            const catLower = category.toLowerCase();
+            allListings = allListings.filter(l =>
+                l.category && l.category.toLowerCase() === catLower
+            );
+        }
+
+        res.render("listings/index.ejs", { allListings, search: search || '', selectedCategory: category || '' });
     } catch (err) {
-        res.render("listings/index.ejs", { allListings: sampleListings });
+        res.render("listings/index.ejs", { allListings: sampleListings, search: '', selectedCategory: '' });
     }
 };
 
