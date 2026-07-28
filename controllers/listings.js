@@ -1,4 +1,5 @@
 const Listing = require("../models/listing");
+const mongoose = require("mongoose");
 const mbxGeocoding = require('@mapbox/mapbox-sdk/services/geocoding');
 const mapToken = process.env.MAP_TOKEN;
 //const geocodingClient = mbxGeocoding({ accessToken: mapToken });
@@ -225,25 +226,38 @@ const sampleListings = [
 module.exports.index = async (req, res) => {
     try {
         const { search, category } = req.query;
-        let queryObj = {};
+        let allListings = [];
 
-        if (search) {
-            const regex = new RegExp(search, "i");
-            queryObj = {
-                $or: [
-                    { title: regex },
-                    { location: regex },
-                    { country: regex }
-                ]
-            };
+        // Check if Mongoose is connected (readyState === 1)
+        if (mongoose.connection && mongoose.connection.readyState === 1) {
+            let queryObj = {};
+            if (search) {
+                const regex = new RegExp(search, "i");
+                queryObj = {
+                    $or: [
+                        { title: regex },
+                        { location: regex },
+                        { country: regex }
+                    ]
+                };
+            }
+
+            // Race MongoDB query against a 500ms fast timeout
+            const dbPromise = Listing.find(queryObj).exec();
+            const timeoutPromise = new Promise((resolve) => setTimeout(() => resolve(null), 500));
+            const dbListings = await Promise.race([dbPromise, timeoutPromise]);
+
+            if (dbListings && dbListings.length > 0) {
+                allListings = dbListings;
+            }
         }
 
-        let allListings = await Listing.find(queryObj);
+        // Fallback to high-performance pre-seeded listings if DB is disconnected or slow
         if (!allListings || allListings.length === 0) {
             allListings = sampleListings;
         }
 
-        // Apply in-memory search and category filter for sampleListings fallback
+        // Apply fast in-memory search and category filtering
         if (search) {
             const s = search.toLowerCase();
             allListings = allListings.filter(l =>
